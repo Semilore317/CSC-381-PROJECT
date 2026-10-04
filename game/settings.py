@@ -32,4 +32,16 @@ VEHICLE_TYPES = [
     dict(name="car_blue",     file="vehicles/car_blue.png",     faces=-1, scale=1.00, speed=(190, 250), weight=3),
     dict(name="danfo_yellow", file="vehicles/danfo_yellow.png", faces=-1, scale=1.25, speed=(150, 210), weight=3),
     dict(name="bus",          file="vehicles/bus.png",          faces=+1, scale=1.50, speed=(110, 150), weight=1),
-]              
+] 
+
+PED_GROUND_Y = (524, 542) #feet lands randomly inside this band
+PED_SCALE = 0.50
+PED_STRIDE_PX = 36 #ground covered by one step
+PED_BOB_PX = 2 #vertical lift at mid-step
+PED_SPEED = (55, 85)
+PED_SPAWN_INTERVAL = (1.2, 3.5)
+PED_MAX = 8
+PED_NAMES  = ["student_male_1", "student_male_2", "student_female_1", "student_female_2"]
+
+# Misc
+PREWARM_SECONDS = 14   # simulate before frame 1 so the scene isn't empty
