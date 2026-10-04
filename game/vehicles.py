@@ -48,3 +48,27 @@ class Lane:
         self.vehicles : list[Vehicle] = [] # index 0 = furthest along
         self.spawn_timer = random.uniform(0.0, 1.5)
         self._weights = [t["weight"] for t in S.VEHICLE_TYPES]
+        
+    def update(self, dt : float) -> None:
+        self.spawn_timer -= dt
+        if self.spawn_timer <= 0:
+            self._try_spawn()
+            
+        for i, v in enumerate(self.vehicles):
+            if i == 0:
+                v.speed = min(v.base_speed, v.speed + S.LANE_ACCEL * dt)
+            else:
+                leader = self.vehicles[i - 1]
+                #bumper-to-bumper distance measured along the direction of travel
+                gap = (leader.x - v.x) * self.direction - (leader.width + v.width) / 2
+                if gap < S.LANE_SAFE_GAP:
+                    if v.speed > leader.speed: #too fast : brake to leader's speed
+                        #TODO(sound) : optional short horn honk
+                        v.speed = max(leader.speed, v.speed - S.LANE_BRAKE * dt)
+                        
+                else : #road is clear so speed up
+                    v.speed = min(v.base_speed, v.speed + S.LANE_ACCEL * dt)
+            v.update(dt)
+            
+    def _try_spawn(self) -> None : 
+        pass
