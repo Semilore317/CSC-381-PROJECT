@@ -33,8 +33,8 @@ VEHICLE_TYPES = [
     dict(name="danfo_yellow", file="vehicles/danfo_yellow.png", faces=-1, scale=1.25, speed=(150, 210), weight=3),
     dict(name="bus",          file="vehicles/bus.png",          faces=+1, scale=1.50, speed=(110, 150), weight=1),
 ] 
-
-PED_GROUND_Y = (524, 542) #feet lands randomly inside this band
+# PED_GROUND_Y = (524, 542)
+PED_GROUND_Y = (534, 545) #feet lands randomly inside this band
 PED_SCALE = 0.50
 PED_STRIDE_PX = 36 #ground covered by one step
 PED_BOB_PX = 2 #vertical lift at mid-step
