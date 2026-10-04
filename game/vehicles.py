@@ -60,7 +60,8 @@ class Lane:
             else:
                 leader = self.vehicles[i - 1]
                 #bumper-to-bumper distance measured along the direction of travel
-                gap = (leader.x - v.x) * self.direction - (leader.width + v.width) / 2
+                gap = (leader.x -
+                       v.x) * self.direction - (leader.width + v.width) / 2
                 if gap < S.LANE_SAFE_GAP:
                     if v.speed > leader.speed: #too fast : brake to leader's speed
                         #TODO(sound) : optional short horn honk
@@ -71,4 +72,16 @@ class Lane:
             v.update(dt)
             
     def _try_spawn(self) -> None : 
-        pass
+        spec = random.choices(S.VEHICLE_TYPES, weights=self._weights)[0]
+        new = Vehicle(spec, self)
+        if self.vehicles:
+            last = self.vehicles[-1] # most recently spawned
+            gap = abs(new.x - last.x) - (new.width + last.width) / 2
+            if gap < S.LANE_MIN_SPAWN_GAP:
+                self.spawn_timer = 0.4
+                return 
+            
+        self.vehicles.append(new)
+        #TODO(sound) : since a vehicle just entered the scene add a pass-by / engine sound
+        #make the sound volume lower for the far lane
+        self.spawn_timer = random.uniform(*S.LANE_SPAWN_INTERVAL)
