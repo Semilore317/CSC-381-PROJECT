@@ -55,4 +55,17 @@ class PedestrianSpawner:
         self.pedestrians : list[Pedestrian] = []
         self.timer = random.uniform(0.0, 1.0)
         
+    def update(self, dt : float) -> None:
+        self.timer -= dt
+        if self.timer <= 0 and len(self.pedestrians) < S.PED_MAX:
+            direction = random.choice((-1, 1))
+            self.pedestrians.append(Pedestrian(random.choice(S.PED_NAMES), direction))
+            self.timer = random.uniform(*S.PED_SPAWN_INTERVAL)
+        elif self.timer <= 0:
+            self.timer = 0.5  #cap rece
+            
+        for p in self.pedestrians:
+            p.update(dt)
+        self.pedestrians = [ p for p in self.pedestrians if not p.off_screen ]
+        
     
