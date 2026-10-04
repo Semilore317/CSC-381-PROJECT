@@ -48,4 +48,11 @@ class Pedestrian :
         lift = math.sin((steps % 1.0) *math.pi) * S.PED_BOB_PX
         surf, foot = frame
         screen.blit(surf, (round(self.x - self.width / 2), round(self.ground_y - foot - lift) ))
+
+
+class PedestrianSpawner:
+    def __init__(self)   :
+        self.pedestrians : list[Pedestrian] = []
+        self.timer = random.uniform(0.0, 1.0)
         
+    
