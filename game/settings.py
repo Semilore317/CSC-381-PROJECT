@@ -17,7 +17,7 @@ FAR_LANE = dict(ground_y=600, direction=-1, depth_scale=0.85)
 NEAR_LANE = dict(ground_y=675, direction=+1, depth_scale=1.00)
 
 
-LANE_SPAWN_INTERVAL = (2.0, 5.0) #seconds between spawn attempts
+LANE_SPAWN_INTERVAL = (2.0, 8.0) #seconds between spawn attempts
 LANE_MIN_SPAWN_GAP = 60 #Free space needed at the entry edge to spawn
 LANE_SAFE_GAP = 130 # a follower starts matching the leader's speed               
 LANE_BRAKE = 600 # px/s^2                  
@@ -40,7 +40,7 @@ PED_STRIDE_PX = 36 #ground covered by one step
 PED_BOB_PX = 2 #vertical lift at mid-step
 PED_SPEED = (55, 85)
 PED_SPAWN_INTERVAL = (1.2, 3.5)
-PED_MAX = 8
+PED_MAX = 5
 PED_NAMES  = ["student_male_1", "student_male_2", "student_female_1", "student_female_2"]
 
 # Misc
