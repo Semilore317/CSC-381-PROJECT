@@ -5,12 +5,25 @@ import pygame
 from . import settings as S 
 from .assets import load_frame
 
+pygame.mixer.init()
+
+HONK_SOUNDS = {
+    # The backup sound if a specific one isn't found
+    "default": pygame.mixer.Sound("assets/vehicles/honk.wav.mp3"),
+    
+    # Specific vehicle sounds
+    "bus": pygame.mixer.Sound("assets/vehicles/bus_horn.wav"),
+    "car_blue": pygame.mixer.Sound("assets/vehicles/car_horn.wav"),
+    "car_red": pygame.mixer.Sound("assets/vehicles/car_horn.wav"),
+    "danfo_yellow": pygame.mixer.Sound("assets/vehicles/honk.wav.mp3") 
+}
 
 class Vehicle:
     def __init__(self, spec : dict, lane : "Lane"):
         
         self.lane = lane
         self.spec_name = spec["name"] #e.g "bus"
+        self.honk_sound = HONK_SOUNDS.get(self.spec_name, HONK_SOUNDS["default"])
         scale = spec["scale"] * lane.depth_scale
         self.frame = load_frame(spec["file"], scale, flip=lane.direction != spec["faces"])
         self.width = self.frame.surface.get_width()
@@ -21,6 +34,7 @@ class Vehicle:
         
         # x is the CENTER of the sprite
         self.x = (-self.width / 2  -5) if lane.direction > 0 else (S.SCREEN_W + self.width/ 2 + 5)
+        self.honk_cooldown = 0.0
         
     @property
     def sort_y(self) -> float:
@@ -31,9 +45,12 @@ class Vehicle:
         if self.lane.direction > 0:
             return self.x - self.width / 2 > S.SCREEN_W
         return self.x + self.width / 2 < 0
+        
     
     def update(self, dt : float) -> None:
         self.x += self.lane.direction * self.speed * dt
+        if self.honk_cooldown > 0:
+            self.honk_cooldown -= dt
         
     def draw(self, screen : pygame.Surface) -> None:
         surf, foot = self.frame
@@ -64,7 +81,9 @@ class Lane:
                        v.x) * self.direction - (leader.width + v.width) / 2
                 if gap < S.LANE_SAFE_GAP:
                     if v.speed > leader.speed: #too fast : brake to leader's speed
-                        #TODO(sound) : optional short horn honk
+                        if v.honk_cooldown <= 0 and random.random() < 0.3:
+                            v.honk_sound.play()
+                            v.honk_cooldown = 20.0 # Increase cooldown so it waits longer before trying again
                         v.speed = max(leader.speed, v.speed - S.LANE_BRAKE * dt)
                         
                 else : #road is clear so speed up
